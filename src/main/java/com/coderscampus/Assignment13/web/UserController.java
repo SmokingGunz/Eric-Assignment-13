@@ -1,6 +1,7 @@
 package com.coderscampus.Assignment13.web;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
 	@Autowired
-	private AccountService accountService;
+    private AccountService accountService;
 
 	@GetMapping("/register")
 	public String getCreateUser(ModelMap model) {
@@ -54,8 +55,10 @@ public class UserController {
 	@GetMapping("/users/{userId}")
 	public String getOneUser(ModelMap model, @PathVariable Long userId) {
 		User user = userService.findById(userId);
+		List<Account> account = user.getAccounts();
 		model.put("users", Arrays.asList(user));
 		model.put("user", user);
+		model.put("accounts", account);
 		return "users";
 	}
 
@@ -71,17 +74,4 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	@PostMapping("/users/{userId}/accounts")
-	public String createAccount(@PathVariable Long userId) {
-		User user = userService.findById(userId);
-		Account account = new Account();
-		account.getUsers().add(user);
-		user.getAccounts().add(account);
-		account.setAccountName("Account #" + user.getAccounts().size());
-
-		accountService.saveAccount(account);
-
-		return "redirect:/users/" + userId + "/accounts";
-
-	}
 }
