@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.coderscampus.Assignment13.domain.Account;
+import com.coderscampus.Assignment13.domain.Address;
 import com.coderscampus.Assignment13.domain.User;
 import com.coderscampus.Assignment13.service.AccountService;
+import com.coderscampus.Assignment13.service.AddressService;
 import com.coderscampus.Assignment13.service.UserService;
 
 @Controller
@@ -21,9 +23,12 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
-    private AccountService accountService;
+	private AccountService accountService;
+
+	@Autowired
+	private AddressService addressService;
 
 	@GetMapping("/register")
 	public String getCreateUser(ModelMap model) {
@@ -56,17 +61,82 @@ public class UserController {
 	public String getOneUser(ModelMap model, @PathVariable Long userId) {
 		User user = userService.findById(userId);
 		List<Account> account = user.getAccounts();
+
+		if (user.getAddress() == null) {
+			Address address = new Address();
+			address.setUser(user);
+			address.setUserId(userId);
+			user.setAddress(address);
+		}
+
 		model.put("users", Arrays.asList(user));
 		model.put("user", user);
 		model.put("accounts", account);
+		model.put("address", user.getAddress());
 		return "users";
 	}
 
-	@PostMapping("/users/{userId}")
-	public String postOneUser(User user) {
-		userService.saveUser(user);
-		return "redirect:/users/" + user.getUserId();
-	}
+//	@PostMapping("/users/{userId}")
+//	public String postUser(@PathVariable Long userId, User user) {
+//
+//		User oldUser = userService.findByIdWithAccounts(userId); // Retrieve the existing User from the database
+//		user.setAccounts(oldUser.getAccounts());
+//		Address address = addressService.save(user.getAddress()); // Retrieve the existing Address from the database
+//		user.setAddress(address);
+//
+//		address.setUser(oldUser);
+//		user.setAddress(address);
+//		address.setUserId(userId);
+////
+////		addressService.save(address); // Save the updated Address object
+//
+//		userService.saveUser(user);
+//
+//		return "redirect:/users/" + userId;
+//	}
+
+//	@PostMapping("/users/{userId}")
+//	public String postOneUser(@PathVariable Long userId, User newUser) {
+//		User oldUser = userService.findById(userId); // Retrieve the existing User from the database
+//
+//		// Get the updated Address from the form
+//		Address updatedAddress = newUser.getAddress();
+//
+//		// Update properties of oldUser with properties from newUser if they are not
+//		// null
+//		userService.updateUserProperties(oldUser, newUser);
+//
+//		// Update properties of the associated Address with properties from
+//		// updatedAddress if they are not null
+//		userService.updateAddressProperties(oldUser.getAddress(), updatedAddress);
+//
+//		userService.saveUser(oldUser); // Save the updated User object
+//
+//		return "redirect:/users/" + userId;
+//	}
+
+//	@PostMapping("/users/{userId}")
+//	public String postUser(@PathVariable Long userId, User user) {
+//	    User oldUser = userService.findById(userId); // Retrieve the existing User from the database
+//	    user.setAccounts(oldUser.getAccounts());
+//
+//	    // Get the updated Address from the form
+//	    Address updatedAddress = user.getAddress();
+//	    if (updatedAddress == null) {
+//	        updatedAddress = new Address();
+//	    } else {
+//	        // Retrieve the existing Address associated with the user
+//	        Address address = oldUser.getAddress();
+//	    }
+//
+//	    user.setAddress(updatedAddress);
+//	    updatedAddress.setUser(user);
+//
+//	    userService.saveUser(user); // Save the updated User object
+//
+//	    return "redirect:/users/" + userId;
+//	}
+	
 
 	@PostMapping("/users/{userId}/delete")
 	public String deleteOneUser(@PathVariable Long userId) {

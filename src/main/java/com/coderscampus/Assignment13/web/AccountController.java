@@ -47,4 +47,13 @@ public class AccountController {
 		return "account";
 	}
 
+	// post method to save user account information by account id
+	@PostMapping("{accountId}")
+	public String saveAccount(@PathVariable Long userId, @PathVariable Long accountId, Account account) {
+
+		accountService.saveAccount(account);
+
+		return "redirect:/users/" + userId + "/accounts/" + accountId;
+	}
+
 }

@@ -2,6 +2,7 @@ package com.coderscampus.Assignment13.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 		+ " left join fetch u.accounts"
 		+ " left join fetch u.address")
 	Set<User> findAllUsersWithAccountsAndAddresses();
+	
+	// query to select a user by user id with account and address
+	@Query("select u from User u"
+        + " left join fetch u.accounts"
+        + " left join fetch u.address"
+        + " where u.userId = :userId")
+	Optional<User> findUserByIdWithAccountsAndAddress(Long userId);
 }
