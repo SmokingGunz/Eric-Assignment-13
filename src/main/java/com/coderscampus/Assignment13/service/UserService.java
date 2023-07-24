@@ -8,7 +8,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coderscampus.Assignment13.domain.Account;
 import com.coderscampus.Assignment13.domain.Address;
 import com.coderscampus.Assignment13.domain.User;
 import com.coderscampus.Assignment13.repository.AccountRepository;
@@ -57,22 +56,53 @@ public class UserService {
 
 	public User saveUser(User user) {
 		if (user.getUserId() == null) {
-			Account checking = new Account();
-			checking.setAccountName("Checking Account");
-			checking.getUsers().add(user);
-			Account savings = new Account();
-			savings.setAccountName("Savings Account");
-			savings.getUsers().add(user);
+//			Account checking = new Account();
+//			checking.setAccountName("Checking Account");
+//			checking.getUsers().add(user);
+//			Account savings = new Account();
+//			savings.setAccountName("Savings Account");
+//			savings.getUsers().add(user);
 			Address address = new Address();
 			address.setUser(user);
 
 			user.setAddress(address);
-			user.getAccounts().add(checking);
-			user.getAccounts().add(savings);
-			accountRepo.save(checking);
-			accountRepo.save(savings);
+//			user.getAccounts().add(checking);
+//			user.getAccounts().add(savings);
+//			accountRepo.save(checking);
+//			accountRepo.save(savings);
 			addressRepo.save(address);
 		}
+
+		if (user.getAddress() == null) {
+			Address address = new Address();
+			address.setUser(user);
+			user.setAddress(address);
+			addressRepo.save(address);
+		}
+
+		if (user.getAddress().getUser() == null) {
+			user.getAddress().setUser(user);
+			user.getAddress().setUserId(user.getUserId());
+		}
+
+		// Save the address separately before updating the user (to avoid cascading
+		// issues)
+		addressRepo.save(user.getAddress());
+
+		// Check if the user has a password (not empty) and update it if necessary
+		// Retrieve the existing user from the database
+		User existingUser = findById(user.getUserId());
+
+		// Check if the user has a password (not empty) and update it only if it was
+		// changed on the form
+		if (user.getPassword() != null && !user.getPassword().isEmpty()
+				&& !user.getPassword().equals(existingUser.getPassword())) {
+			existingUser.setPassword(user.getPassword());
+			userRepo.save(existingUser);
+		}else {
+			user.setPassword(existingUser.getPassword());
+		}
+
 		return userRepo.save(user);
 	}
 
@@ -84,62 +114,6 @@ public class UserService {
 
 		Optional<User> userOpt = userRepo.findUserByIdWithAccountsAndAddress(userId);
 		return userOpt.orElse(new User());
-	}
-
-	public void updateUserProperties(User oldUser, User newUser) {
-		if (newUser.getName() != null) {
-			oldUser.setName(newUser.getName());
-		}else {
-			oldUser.setName(oldUser.getName());
-		}
-		if (newUser.getUsername() != null) {
-			oldUser.setUsername(newUser.getUsername());
-		} else {
-			oldUser.setUsername(oldUser.getUsername());
-		}
-		if (newUser.getPassword() != null) {
-			oldUser.setPassword(newUser.getPassword());
-		}else {
-			oldUser.setPassword(oldUser.getPassword());
-		}
-		if (newUser.getAccounts() != null) {
-			oldUser.setAccounts(newUser.getAccounts());
-		}else {
-			oldUser.setAccounts(oldUser.getAccounts());
-		}
-	}
-
-	public void updateAddressProperties(Address address, Address updatedAddress) {
-		if (updatedAddress.getCity() != null) {
-			address.setCity(updatedAddress.getCity());
-		}else {
-			address.setCity(address.getCity());
-		}
-		if (updatedAddress.getRegion() != null) {
-			address.setRegion(updatedAddress.getRegion());
-		}else {
-			address.setRegion(address.getRegion());
-		}
-		if (updatedAddress.getCountry() != null) {
-			address.setCountry(updatedAddress.getCountry());
-		}else {
-			address.setCountry(address.getCountry());
-		}
-		if (updatedAddress.getZipCode() != null) {
-			address.setZipCode(updatedAddress.getZipCode());
-		}else {
-			address.setZipCode(address.getZipCode());
-		}
-		if (updatedAddress.getAddressLine1() != null) {
-			address.setAddressLine1(updatedAddress.getAddressLine1());
-		}else {
-			address.setAddressLine1(address.getAddressLine1());
-		}
-		if (updatedAddress.getAddressLine2() != null) {
-			address.setAddressLine2(updatedAddress.getAddressLine2());
-		}else {
-			address.setAddressLine2(address.getAddressLine2());
-		}
 	}
 
 }
