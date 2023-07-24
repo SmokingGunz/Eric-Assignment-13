@@ -1,5 +1,6 @@
 package com.coderscampus.Assignment13.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -28,7 +29,7 @@ public class Address {
 		this.userId = userId;
 	}
 	
-	@OneToOne
+	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST,})
 	@MapsId
 	@JoinColumn(name="user_id")
 	public User getUser() {

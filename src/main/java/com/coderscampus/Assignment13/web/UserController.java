@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.coderscampus.Assignment13.domain.Account;
 import com.coderscampus.Assignment13.domain.Address;
 import com.coderscampus.Assignment13.domain.User;
-import com.coderscampus.Assignment13.service.AccountService;
-import com.coderscampus.Assignment13.service.AddressService;
 import com.coderscampus.Assignment13.service.UserService;
 
 @Controller
@@ -23,12 +21,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private AddressService addressService;
 
     @GetMapping("/register")
     public String getCreateUser(ModelMap model) {
