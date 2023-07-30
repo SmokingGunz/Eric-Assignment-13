@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.coderscampus.Assignment13.domain.Address;
 import com.coderscampus.Assignment13.domain.User;
-import com.coderscampus.Assignment13.repository.AccountRepository;
 import com.coderscampus.Assignment13.repository.AddressRepository;
 import com.coderscampus.Assignment13.repository.UserRepository;
 
@@ -19,9 +18,6 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepo;
-	@Autowired
-	private AccountRepository accountRepo;
-
 	@Autowired
 	private AddressRepository addressRepo;
 

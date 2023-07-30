@@ -38,7 +38,7 @@ public class AccountController {
 	}
 
 	// method to populate model with user account information by account id
-	@GetMapping("{accountId}")
+	@GetMapping("/{accountId}")
 	public String getAccount(ModelMap model, @PathVariable Long userId, @PathVariable Long accountId) {
 		Account account = accountService.findById(accountId);
 		User user = userService.findById(userId);
@@ -48,7 +48,7 @@ public class AccountController {
 	}
 
 	// post method to save user account information by account id
-	@PostMapping("{accountId}")
+	@PostMapping("/{accountId}")
 	public String saveAccount(@PathVariable Long userId, @PathVariable Long accountId, Account account) {
 
 		accountService.saveAccount(account);

@@ -2,22 +2,24 @@
 <html xmlns:th="http://thymeleaf.org">
 
 <head>
-    <title>!Generic Account - Needs Changed to reflect individual account through Thymeleaf!</title>
+    <title>[[${account.accountName}]]</title>
 </head>
 
 <body>
-    <h1>!Generic Account - Needs Changed to reflect individual account through Thymeleaf!</h1>
+    <h1>[[${account.accountName}]]</h1>
 
-    <form th:action="@{users/{userId}/accounts/{accountId}(userId=${user.userId}&accountId=${account.accountId})}"
+    <form th:action="@{/users/{userId}/accounts/{accountId}(userId=${user.userId}, accountId=${account.accountId})}"
         method="post">
         <div>
-            Account Name: <input type="text" th:field="${account.accountname}" />
+            Account Name: <input type="text" th:field="${account.accountName}" />
         </div>
 
         <div>
             <input type="submit" value="Save Account" />
         </div>
     </form>
+    <hr />
+    <a th:href="@{/users/{userId}(userId=${user.userId})}">Back</a>
 </body>
 
 </html>
