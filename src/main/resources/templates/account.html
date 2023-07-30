@@ -8,7 +8,7 @@
 <body>
     <h1>!Generic Account - Needs Changed to reflect individual account through Thymeleaf!</h1>
 
-    <form th:action="@{/users/{userId}/accounts/{accountId}(accountId=${account.accountId}&userId=${user.userId})}"
+    <form th:action="@{users/{userId}/accounts/{accountId}(userId=${user.userId}&accountId=${account.accountId})}"
         method="post">
         <div>
             Account Name: <input type="text" th:field="${account.accountname}" />
